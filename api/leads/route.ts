@@ -1,0 +1,5 @@
+import { NextResponse } from "next/server";
+export async function POST(req:Request){try{const body=await req.json();const key=process.env.WHOP_API_KEY, account=process.env.WHOP_ACCOUNT_ID;if(!key||!account)return NextResponse.json({error:"Configure WHOP_API_KEY and WHOP_ACCOUNT_ID"}, {status:503});
+// Verify exact Leads API payload/endpoint against current Whop docs before production use.
+const response=await fetch("https://api.whop.com/api/v1/leads",{method:"POST",headers:{"Authorization":`Bearer ${key}`,"Content-Type":"application/json","Api-Version-Date":process.env.WHOP_API_VERSION_DATE||"2025-05-15"},body:JSON.stringify({account_id:account,name:body.name,email:body.email,phone:body.phone,description:`Roof estimate request. Address: ${body.address||"Not supplied"}. Details: ${body.details||"Not supplied"}`})});
+const data=await response.json().catch(()=>({}));if(!response.ok)return NextResponse.json({error:data?.message||"Lead API rejected request"}, {status:response.status});return NextResponse.json({ok:true,data});}catch{return NextResponse.json({error:"Invalid request"}, {status:400})}}

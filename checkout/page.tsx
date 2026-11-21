@@ -1,0 +1,2 @@
+// Embedded Whop checkout page template. Add valid sandbox/live plan IDs after account setup.
+import {CheckoutDemo} from "@/components/checkout-demo";export default function CheckoutPage(){return <CheckoutDemo/>}
